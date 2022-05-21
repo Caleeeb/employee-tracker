@@ -16,6 +16,7 @@ let mainMenuOptionsList = [
     "Add a department",
     "Add a role",
     "Add a employee",
+    "Update an employee",
     "Exit"
 ]
 
@@ -31,7 +32,45 @@ async function mainMenuOptions() {
         .then((answer) => {
             answerPusher(answer);
         });
+};
+
+async function answerPusher(answer) {
+    switch (answer.choice) {
+        case "": {
+            await mainMenuOptions();
+            break;
+        }
+        case "": {
+            await mainMenuOptions();
+            break;
+        }
+        case "": {
+            await mainMenuOptions();
+            break;
+        }
+        case "": {
+            await mainMenuOptions();
+            break;
+        }
+        case "": {
+            await mainMenuOptions();
+            break;
+        }
+        case "": {
+            await mainMenuOptions();
+            break;
+        }
+        case "": {
+            await mainMenuOptions();
+            break;
+        }
+        default: {
+            return;
+        }
+    }
 }
+
+mainMenuOptions();
 
 
 
