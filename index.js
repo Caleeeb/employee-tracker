@@ -13,7 +13,7 @@ let mainMenuOptionsList = [
     "Add a department",
     "Add a role",
     "Add a employee",
-    "Update an employee",
+    "Update an employee role",
     "Exit"
 ]
 
@@ -63,18 +63,38 @@ async function answerPusher(answer) {
             await mainMenuOptions();
             break;
         }
-        case "Update an employee": {
+        case "Update an employee role": {
+            await updateEmployeeRole();
             await mainMenuOptions();
             break;
         }
-        default: {
+        case "Exit":
+            runExit();
             break;
-        }
     }
-}
+};
 
-// inquirer questions
-// 
+// inquirer questions 
+
+async function viewAllEmployees() {
+    const db = new Database(connection);
+    const employees = await db.viewAllEmployees();
+    console.table(employees);
+};
+
+async function viewAllRoles() {
+    const db = new Database(connection);
+    const roles = await db.viewAllRoles();
+    console.table(roles);
+
+};
+
+async function viewAllDepartments() {
+    const db = new Database(connection);
+    const departments = await db.viewAllDepartments();
+    console.table(departments);
+};
+
 async function createEmployee() {
     const db = new Database(connection);
     const allEmployees = await db.viewAllEmployees();
@@ -119,7 +139,7 @@ async function createEmployee() {
             console.log(employee);
             db.createNewEmployee(employee);
         });
-}
+};
 
 async function createNewRole() {
     const db = new Database(connection);
@@ -151,7 +171,7 @@ async function createNewRole() {
             console.log(role);
             db.createNewRole(role);
         });
-}
+};
 
 async function createNewDepartment() {
     const db = new Database(connection);
@@ -166,25 +186,46 @@ async function createNewDepartment() {
             console.log(name);
             db.createNewDepartment(name);
         });
-}
+};
 
-async function viewAllEmployees() {
+async function updateEmployeeRole() {
     const db = new Database(connection);
-    const employees = await db.viewAllEmployees();
-    console.table(employees);
-}
+    const allEmployees = await db.viewAllEmployees();
+    const employeeNames = allEmployees.map(employee => {
+        return {
+            name: employee.first_name + " " + employee.last_name,
+            value: employee.id
+        }
+    });
+    const allRoles = await db.viewAllRoles();
+    const employeeRoles = allRoles.map(role => {
+        return {
+            name: role.title,
+            value: role.id
+        }
+    });
+    const answer = await inquire.prompt(
+        [{
+            type: "list",
+            message: "Which employee would you like to update?",
+            choices: employeeNames,
+            name: "id"
+        },
+        {
+            type: "list",
+            message: "What would you like to assign as this employee's new role?",
+            choices: employeeRoles,
+            name: "role_id"
+        }
+        ])
+        .then(role => {
+            console.log(role);
+            db.updateEmployeeRole(role.role_id, role.id);
+        });
+};
 
-async function viewAllRoles() {
-    const db = new Database(connection);
-    const roles = await db.viewAllRoles();
-    console.table(roles);
-
-}
-
-async function viewAllDepartments() {
-    const db = new Database(connection);
-    const departments = await db.viewAllDepartments();
-    console.table(departments);
-}
+async function runExit() {
+    process.exit(0);
+};
 
 mainMenuOptions();
