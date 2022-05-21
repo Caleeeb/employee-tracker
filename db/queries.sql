@@ -1,3 +1,4 @@
--- I use this to check queires in workbench so I can copy and paste them into the queries 
+-- I use this to check queires kinda like workbench
 USE employees_db;
 
+SELECT * FROM employees;
