@@ -26,7 +26,7 @@ VALUES  ("Marketing Manager", 150000.00, 1),
 INSERT INTO employees (first_name, last_name, role_id)
 VALUES  ("Michael", "Jacobs", 1),
         ("Aaron", "Smith", 2),
-        ("Jason", "Teeaye", 3),
+        ("Jason", "Howe", 3),
         ("Pharah", "Roket", 4),
         ("Ana", "Dart", 5),
         ("Cole", "Cassidy", 6),

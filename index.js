@@ -39,6 +39,7 @@ async function answerPusher(answer) {
             break;
         }
         case "View all roles": {
+            await viewAllRoles();
             await mainMenuOptions();
             break;
         }
@@ -48,15 +49,18 @@ async function answerPusher(answer) {
             break;
         }
         case "Add a department": {
+            await createNewDepartment();
             await mainMenuOptions();
             break;
         }
         case "Add a role": {
+            await createNewRole();
             await mainMenuOptions();
             break;
         }
         case "Add a employee": {
             await createEmployee();
+            await mainMenuOptions();
             break;
         }
         case "Update an employee": {
@@ -68,10 +72,6 @@ async function answerPusher(answer) {
         }
     }
 }
-
-
-
-
 
 // inquirer questions
 // 
@@ -119,15 +119,53 @@ async function createEmployee() {
             console.log(employee);
             db.createNewEmployee(employee);
         });
-    mainMenuOptions();
 }
 
-async function createRole() {
-
+async function createNewRole() {
+    const db = new Database(connection);
+    const allDepartments = await db.viewAllDepartments();
+    const departmentNames = allDepartments.map(department => {
+        return {
+            name: department.name,
+            value: department.id
+        }
+    });
+    const answer = await inquire.prompt(
+        [{
+            type: "input",
+            message: "What is the title of this role?",
+            name: "title"
+        },
+        {
+            type: "input",
+            message: "What is the salary of this role?",
+            name: "salary"
+        },
+        {
+            type: "list",
+            message: "Which department does this role belong to?",
+            choices: departmentNames,
+            name: "department_id"
+        }])
+        .then(role => {
+            console.log(role);
+            db.createNewRole(role);
+        });
 }
 
-async function createDepartment() {
-
+async function createNewDepartment() {
+    const db = new Database(connection);
+    await inquire.prompt(
+        {
+            type: "input",
+            message: "What is the name of the new department?",
+            name: 'name'
+        }
+    )
+        .then(name => {
+            console.log(name);
+            db.createNewDepartment(name);
+        });
 }
 
 async function viewAllEmployees() {
@@ -137,6 +175,9 @@ async function viewAllEmployees() {
 }
 
 async function viewAllRoles() {
+    const db = new Database(connection);
+    const roles = await db.viewAllRoles();
+    console.table(roles);
 
 }
 
